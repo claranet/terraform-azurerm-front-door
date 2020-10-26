@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Access denied!</title>
+    <meta charset="utf-8">
+    <style>
+      body {
+        text-align: center;
+        font-family: 'Nobile', arial, serif;
+        font-size: 24px;
+        color: #000;
+        text-shadow: -0.1em -0.1em 0.1em white;
+        background-color: #fff;
+      }
+      a.button {
+        color: #eee;
+        background: #555;
+        padding: 0px 12px;
+        border-radius: 15px;
+        text-shadow: none;
+      }
+      a.button:hover {
+        color: #fff;
+        background: #000;
+      }
+      a {
+        color: #777;
+        text-decoration: none;
+        transition: 0.5s;
+      }
+      a:hover {
+        color: #333;
+      }
+      ul {
+        display: inline-block;
+        *display: inline;
+      }
+      ul li {
+         text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h2><span style="color: red">⊖</span> Access denied!</h2>
+    <p>The request URL was rejected.</p>
+    <p>For additional information, please contact support and provide these informations</p>
+    <ul>
+      <li>Value of X-Azure-Ref header</li>
+      <li>Date: <div style="display: inline" id="datetime"></div></li>
+      <li>URL: <div style="display: inline" id="url"></div>
+    </ul>
+    <footer>
+      <a class="button" href="javascript: history.back();">back</a>
+    </footer>
+    <script>
+      var today = new Date();
+      document.getElementById("datetime").innerHTML = today.toUTCString();
+      document.getElementById("url").innerHTML = document.URL;
+    </script>
+  </body>
+</html>
