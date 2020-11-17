@@ -9,11 +9,12 @@ This terraform module is designed to create an [Azure Front Door](https://www.te
 
 ## Version compatibility
 
-| Module version    | Terraform version | AzureRM version |
-|-------------------|-------------------|-----------------|
-| >= 3.x.x          | 0.12.x            | >= 2.0          |
-| >= 2.x.x, < 3.x.x | 0.12.x            | <  2.0          |
-| <  2.x.x          | 0.11.x            | <  2.0          |
+| Module version | Terraform version | AzureRM version |
+|----------------|-------------------| --------------- |
+| >= 4.x.x       | 0.13.x            | >= 2.25         |
+| >= 3.x.x       | 0.12.x            | >= 2.25         |
+| >= 2.x.x       | 0.12.x            | < 2.0           |
+| <  2.x.x       | 0.11.x            | < 2.0           |
 
 ## Usage
 
