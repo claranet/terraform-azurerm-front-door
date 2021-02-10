@@ -3,6 +3,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   resource_group_name = var.resource_group_name
 
   enforce_backend_pools_certificate_name_check = var.enforce_backend_pools_certificate_name_check
+  backend_pools_send_receive_timeout_seconds   = var.backend_pools_send_receive_timeout_seconds
 
   dynamic "backend_pool" {
     for_each = local.backend_pools
