@@ -50,6 +50,12 @@ variable "name" {
   default     = ""
 }
 
+variable "backend_pools_send_receive_timeout_seconds" {
+  description = "Specifies the send and receive timeout on forwarding request to the backend"
+  type        = number
+  default     = 60
+}
+
 variable "backend_pools" {
   description = "A list of backend_pool blocks."
   type        = list(any)
