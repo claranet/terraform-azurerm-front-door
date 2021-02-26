@@ -1,4 +1,4 @@
-# Unreleased
+# v4.2.0 - 2021-02-26
 
 Added
   * AZ-442: backend\_pools\_send\_receive\_timeout\_seconds parameter
