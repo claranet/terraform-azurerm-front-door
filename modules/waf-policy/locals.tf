@@ -13,7 +13,7 @@ locals {
   )
 
   waf_custom_block_response_body = (
-    fileexists(local.custom_waf_custom_block_response_body) ?
+    fileexists(substr(local.custom_waf_custom_block_response_body, 0, 255)) ?
     filebase64(local.custom_waf_custom_block_response_body) : var.waf_custom_block_response_body
   )
 

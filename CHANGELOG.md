@@ -1,3 +1,8 @@
+# Unreleased
+
+Fixes
+  * AZ-459: Avoid Go error `file name too long` by truncating the `custom_block*` variables to 255 characters
+
 # v4.2.0 - 2021-02-26
 
 Added

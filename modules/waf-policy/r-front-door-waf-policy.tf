@@ -7,7 +7,7 @@ resource "azurerm_frontdoor_firewall_policy" "frontdoor-waf" {
   redirect_url                      = var.waf_redirect_url != "" ? var.waf_redirect_url : null
   custom_block_response_status_code = var.waf_custom_block_response_status_code
   custom_block_response_body = (
-    fileexists(var.waf_custom_block_response_body)
+    fileexists(substr(var.waf_custom_block_response_body, 0, 255))
     ? filebase64(var.waf_custom_block_response_body)
     : var.waf_custom_block_response_body
   )
