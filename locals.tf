@@ -21,4 +21,6 @@ locals {
   backend_pool_health_probes   = var.backend_pool_health_probes
   backend_pool_load_balancings = var.backend_pool_load_balancings
   backend_pools                = var.backend_pools
+
+  rm_frontend_endpoints = { for fe in local.frontend_endpoints : fe.name => fe }
 }

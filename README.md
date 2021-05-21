@@ -126,7 +126,7 @@ module "front-door" {
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2 >= 2.25 |
+| azurerm | >= 2.60 |
 
 ## Inputs
 
@@ -135,7 +135,7 @@ module "front-door" {
 | backend\_pool\_health\_probes | A list of backend\_pool\_health\_probe blocks. | `list(map(string))` | <pre>[<br>  {<br>    "default": "default"<br>  }<br>]</pre> | no |
 | backend\_pool\_load\_balancings | A list of backend\_pool\_load\_balancing blocks. | `list(map(string))` | <pre>[<br>  {<br>    "default": "default"<br>  }<br>]</pre> | no |
 | backend\_pools | A list of backend\_pool blocks. | `list(any)` | n/a | yes |
-| backend\_pools\_send\_receive\_timeout\_seconds | n/a | `number` | `60` | no |
+| backend\_pools\_send\_receive\_timeout\_seconds | Specifies the send and receive timeout on forwarding request to the backend | `number` | `60` | no |
 | client\_name | Client name/account used in naming | `string` | n/a | yes |
 | diag\_settings\_name | Custom name for the diagnostic settings of Application Gateway. | `string` | `""` | no |
 | enable\_default\_backend\_pools\_parameters | Use the module default backend\_pools\_health\_probe and backend\_pools\_load\_balancing blocks. | `bool` | `true` | no |
@@ -166,6 +166,7 @@ module "front-door" {
 | Name | Description |
 |------|-------------|
 | frontdoor\_cname | The host that each frontendEndpoint must CNAME to |
+| frontdoor\_frontend\_endpoints | The IDs of the frontend endpoints. |
 | frontdoor\_id | The ID of the FrontDoor. |
 
 ## Related documentation

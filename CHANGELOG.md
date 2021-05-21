@@ -1,5 +1,9 @@
 # Unreleased
 
+Breaking
+  * AZ-498: Switch to `azurerm_frontdoor_custom_https_configuration` to manage HTTPS. Read [Migration Guide](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration)
+  * AZ-498: azurerm provider >=2.60
+
 Fixes
   * AZ-459: Avoid Go error `file name too long` by truncating the `custom_block*` variables to 255 characters
 

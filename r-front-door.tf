@@ -64,38 +64,18 @@ resource "azurerm_frontdoor" "frontdoor" {
     content {
       name                                    = local.default_frontend_endpoint_name
       host_name                               = local.default_hostname
-      custom_https_provisioning_enabled       = false
       web_application_firewall_policy_link_id = var.frontdoor_waf_policy_id
     }
   }
 
   dynamic "frontend_endpoint" {
-    for_each = local.frontend_endpoints
+    for_each = { for fev in local.frontend_endpoints : fev.name => fev }
     content {
       name                                    = lookup(frontend_endpoint.value, "name", null)
       host_name                               = lookup(frontend_endpoint.value, "host_name", null)
       session_affinity_enabled                = lookup(frontend_endpoint.value, "session_affinity_enabled", false)
       session_affinity_ttl_seconds            = lookup(frontend_endpoint.value, "session_affinity_ttl_seconds", 0)
-      custom_https_provisioning_enabled       = lookup(frontend_endpoint.value, "custom_https_provisioning_enabled", false)
       web_application_firewall_policy_link_id = lookup(frontend_endpoint.value, "web_application_firewall_policy_link_id", null)
-      dynamic "custom_https_configuration" {
-        for_each = lookup(frontend_endpoint.value, "custom_https_configurations", null)
-        content {
-          certificate_source = lookup(custom_https_configuration.value, "certificate_source", "FrontDoor")
-          azure_key_vault_certificate_vault_id = (
-            lookup(custom_https_configuration.value, "certificate_source", "FrontDoor") == "AzureKeyVault" ?
-            lookup(custom_https_configuration.value, "azure_key_vault_certificate_vault_id") : null
-          )
-          azure_key_vault_certificate_secret_name = (
-            lookup(custom_https_configuration.value, "certificate_source", "FrontDoor") == "AzureKeyVault" ?
-            lookup(custom_https_configuration.value, "azure_key_vault_certificate_secret_name") : null
-          )
-          azure_key_vault_certificate_secret_version = (
-            lookup(custom_https_configuration.value, "certificate_source", "FrontDoor") == "AzureKeyVault" ?
-            lookup(custom_https_configuration.value, "azure_key_vault_certificate_secret_version") : null
-          )
-        }
-      }
     }
   }
 
@@ -156,5 +136,30 @@ resource "azurerm_frontdoor" "frontdoor" {
         }
       }
     }
+  }
+}
+
+resource "azurerm_frontdoor_custom_https_configuration" "custom_https_configuration" {
+  for_each = { for fek, fev in azurerm_frontdoor.frontdoor.frontend_endpoints : fek => fev if lookup(lookup(local.rm_frontend_endpoints, fek, {}), "custom_https_configurations", null) != null ? true : false }
+
+  frontend_endpoint_id = each.value
+
+  custom_https_provisioning_enabled = lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "custom_https_configurations", null) != null ? true : false
+
+  custom_https_configuration {
+    certificate_source = lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "certificate_source", "FrontDoor")
+
+    azure_key_vault_certificate_vault_id = (
+      lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "certificate_source", "FrontDoor") == "AzureKeyVault" ?
+      lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "azure_key_vault_certificate_vault_id") : null
+    )
+    azure_key_vault_certificate_secret_name = (
+      lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "certificate_source", "FrontDoor") == "AzureKeyVault" ?
+      lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "azure_key_vault_certificate_secret_name") : null
+    )
+    azure_key_vault_certificate_secret_version = (
+      lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "certificate_source", "FrontDoor") == "AzureKeyVault" ?
+      lookup(lookup(local.rm_frontend_endpoints, each.key, {}), "azure_key_vault_certificate_secret_version") : null
+    )
   }
 }
