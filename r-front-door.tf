@@ -63,7 +63,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     for_each = var.enable_default_frontend_endpoint ? ["fake"] : []
     content {
       name                                    = local.default_frontend_endpoint_name
-      host_name                               = local.default_hostname
+      host_name                               = local.default_frontend_endpoint_hostname
       web_application_firewall_policy_link_id = var.frontdoor_waf_policy_id
     }
   }
@@ -137,6 +137,8 @@ resource "azurerm_frontdoor" "frontdoor" {
       }
     }
   }
+
+  tags = merge(local.default_tags, var.extra_tags)
 }
 
 resource "azurerm_frontdoor_custom_https_configuration" "custom_https_configuration" {

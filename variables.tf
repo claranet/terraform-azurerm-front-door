@@ -44,7 +44,7 @@ variable "extra_tags" {
 
 # ------------------
 # Front Door
-variable "name" {
+variable "custom_name" {
   description = "Specifies the name of the Front Door service."
   type        = string
   default     = ""
@@ -210,39 +210,25 @@ variable "frontdoor_waf_policy_id" {
 
 #-------------
 # LOGGING
-variable "enable_logging" {
-  description = "Boolean flag to specify whether logging is enabled"
-  type        = bool
-  default     = true
+variable "logs_destinations_ids" {
+  type        = list(string)
+  description = "List of destination resources Ids for logs diagnostics destination. Can be Storage Account, Log Analytics Workspace and Event Hub. No more than one of each can be set. Empty list to disable logging."
 }
 
-variable "diag_settings_name" {
-  description = "Custom name for the diagnostic settings of Application Gateway."
-  type        = string
-  default     = ""
+variable "logs_categories" {
+  type        = list(string)
+  description = "Log categories to send to destinations."
+  default     = null
 }
 
-variable "logs_enable_metrics" {
-  description = "Boolean flag to specify whether collecting metrics is enabled"
-  type        = bool
-  default     = false
+variable "logs_metrics_categories" {
+  type        = list(string)
+  description = "Metrics categories to send to destinations."
+  default     = null
 }
 
-variable "logs_storage_retention" {
-  description = "Retention in days for logs on Storage Account"
+variable "logs_retention_days" {
   type        = number
+  description = "Number of days to keep logs on storage account"
   default     = 30
 }
-
-variable "logs_storage_account_id" {
-  description = "Storage Account id for logs"
-  type        = string
-  default     = null
-}
-
-variable "logs_log_analytics_workspace_id" {
-  description = "Log Analytics Workspace id for logs"
-  type        = string
-  default     = null
-}
-
