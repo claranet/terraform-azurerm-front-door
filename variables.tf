@@ -136,7 +136,7 @@ variable "frontend_endpoints" { # required but claranet by default use default_f
   #   custom_https_provisioning_enabled = bool   # required defaults to ??
   #   custom_https_configuration = object({
   #     certificate_source                         = string # optional
-  #     azure_key_vault_certificate_id             = string # required if AzureKeyVault
+  #     azure_key_vault_certificate_vault_id       = string # required if AzureKeyVault
   #     azure_key_vault_certificate_secret_name    = string # required if AzureKeyVault
   #     azure_key_vault_certificate_secret_version = string # required if AzureKeyVault
   #   })

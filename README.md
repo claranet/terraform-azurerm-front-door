@@ -89,13 +89,21 @@ module "front-door" {
     {
       name                                    = "custom-fo"
       host_name                               = "custom-fo.example.com"
-      custom_https_provisioning_enabled       = true
       web_application_firewall_policy_link_id = module.front-door-waf.waf_policy_id
-      custom_https_configurations = [
-        {
+      custom_https_configuration = {
           certificate_source = "FrontDoor"
         }
-      ]
+    },
+    {
+      name                                    = "custom-bo"
+      host_name                               = "custom-bo.example.com"
+      web_application_firewall_policy_link_id = module.front-door-waf.waf_policy_id
+      custom_https_configuration = {
+        certificate_source = "AzureKeyVault"
+        azure_key_vault_certificate_vault_id       = "<key_vault_id>"
+        azure_key_vault_certificate_secret_name    = "<key_vault_secret_name>"
+        azure_key_vault_certificate_secret_version = "<secret_version>"  # optional, use "latest" if not defined
+      }
     }
   ]
 
