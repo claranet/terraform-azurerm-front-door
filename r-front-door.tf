@@ -142,11 +142,11 @@ resource "azurerm_frontdoor" "frontdoor" {
 }
 
 resource "azurerm_frontdoor_custom_https_configuration" "custom_https_configuration" {
-  for_each = { for fek, fev in azurerm_frontdoor.frontdoor.frontend_endpoints : fek => fev if lookup(lookup(local.rm_frontend_endpoints, fek, {}), "custom_https_configuration", null) != null ? true : false }
+  for_each = { for fek, fev in local.rm_frontend_endpoints : fek => fev if try(local.rm_frontend_endpoints[fek]["custom_https_configuration"], null) != null }
 
-  frontend_endpoint_id = each.value
+  frontend_endpoint_id = format("%s/frontendEndpoints/%s", azurerm_frontdoor.frontdoor.id, each.key)
 
-  custom_https_provisioning_enabled = try(local.rm_frontend_endpoints[each.key]["custom_https_configuration"], null) != null
+  custom_https_provisioning_enabled = true
 
   custom_https_configuration {
     certificate_source = try(local.rm_frontend_endpoints[each.key]["custom_https_configuration"]["certificate_source"], "FrontDoor")
