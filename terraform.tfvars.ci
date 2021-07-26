@@ -5,7 +5,7 @@ azure_state_access_key="1234"
 client_name="test"
 environment="test"
 stack="ci"
-name = "my-front-door"
+custom_name="my-front-door"
 backend_pools = [{ "name" = "my-pool", "backends" = [{ "address" = "127.0.0.1", "host_header" = "example.com" }] }]
 backend_pools_health_probe = [{ "name" = "my-healthcheck" }]
 backend_pools_load_balancing = [{ "name" = "my-lb" }]
