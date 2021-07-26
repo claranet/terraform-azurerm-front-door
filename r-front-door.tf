@@ -6,7 +6,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   backend_pools_send_receive_timeout_seconds   = var.backend_pools_send_receive_timeout_seconds
 
   dynamic "backend_pool" {
-    for_each = local.backend_pools
+    for_each = var.backend_pools
     content {
       name = lookup(backend_pool.value, "name")
       load_balancing_name = lookup(backend_pool.value, "load_balancing_name", (
@@ -34,7 +34,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "backend_pool_health_probe" {
-    for_each = local.backend_pool_health_probes
+    for_each = var.backend_pool_health_probes
     content {
       name = lookup(backend_pool_health_probe.value, "name", (
         var.enable_default_backend_pools_parameters ? local.default_backend_pool_health_probe_name : null
@@ -48,7 +48,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "backend_pool_load_balancing" {
-    for_each = local.backend_pool_load_balancings
+    for_each = var.backend_pool_load_balancings
     content {
       name = lookup(backend_pool_load_balancing.value, "name", (
         var.enable_default_backend_pools_parameters ? local.default_backend_pool_load_balancing_name : null
@@ -69,7 +69,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "frontend_endpoint" {
-    for_each = { for fev in local.frontend_endpoints : fev.name => fev }
+    for_each = { for fe in var.frontend_endpoints : fe.name => fe }
     content {
       name                                    = lookup(frontend_endpoint.value, "name", null)
       host_name                               = lookup(frontend_endpoint.value, "host_name", null)
@@ -82,13 +82,13 @@ resource "azurerm_frontdoor" "frontdoor" {
   dynamic "routing_rule" {
     for_each = var.enable_default_routing_rule ? ["fake"] : []
     content {
-      name               = join("-", [local.backend_pools[0].name, "rr"])
+      name               = join("-", [var.backend_pools[0].name, "rr"])
       frontend_endpoints = [local.default_frontend_endpoint_name]
       accepted_protocols = ["Http", "Https"]
       patterns_to_match  = ["/*"]
       enabled            = true
       forwarding_configuration {
-        backend_pool_name                     = local.backend_pools[0].name
+        backend_pool_name                     = var.backend_pools[0].name
         cache_enabled                         = false
         cache_use_dynamic_compression         = false
         cache_query_parameter_strip_directive = "StripAll"
@@ -98,7 +98,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "routing_rule" {
-    for_each = local.routing_rules
+    for_each = var.routing_rules
     content {
       name = lookup(routing_rule.value, "name")
       frontend_endpoints = lookup(routing_rule.value, "frontend_endpoints", (
@@ -142,17 +142,17 @@ resource "azurerm_frontdoor" "frontdoor" {
 }
 
 resource "azurerm_frontdoor_custom_https_configuration" "custom_https_configuration" {
-  for_each = { for fek, fev in local.rm_frontend_endpoints : fek => fev if try(local.rm_frontend_endpoints[fek]["custom_https_configuration"], null) != null }
+  for_each = { for fe in var.frontend_endpoints : fe.name => fe if try(fe["custom_https_configuration"], null) != null }
 
   frontend_endpoint_id = format("%s/frontendEndpoints/%s", azurerm_frontdoor.frontdoor.id, each.key)
 
   custom_https_provisioning_enabled = true
 
   custom_https_configuration {
-    certificate_source = try(local.rm_frontend_endpoints[each.key]["custom_https_configuration"]["certificate_source"], "FrontDoor")
+    certificate_source = try(each.value["custom_https_configuration"]["certificate_source"], "FrontDoor")
 
-    azure_key_vault_certificate_vault_id       = try(local.rm_frontend_endpoints[each.key]["custom_https_configuration"]["azure_key_vault_certificate_vault_id"], null)
-    azure_key_vault_certificate_secret_name    = try(local.rm_frontend_endpoints[each.key]["custom_https_configuration"]["azure_key_vault_certificate_secret_name"], null)
-    azure_key_vault_certificate_secret_version = try(local.rm_frontend_endpoints[each.key]["custom_https_configuration"]["azure_key_vault_certificate_secret_version"], null)
+    azure_key_vault_certificate_vault_id       = try(each.value["custom_https_configuration"]["azure_key_vault_certificate_vault_id"], null)
+    azure_key_vault_certificate_secret_name    = try(each.value["custom_https_configuration"]["azure_key_vault_certificate_secret_name"], null)
+    azure_key_vault_certificate_secret_version = try(each.value["custom_https_configuration"]["azure_key_vault_certificate_secret_version"], null)
   }
 }

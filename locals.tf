@@ -13,12 +13,4 @@ locals {
     env   = var.environment
     stack = var.stack
   }
-
-  frontend_endpoints           = var.frontend_endpoints
-  routing_rules                = var.routing_rules
-  backend_pool_health_probes   = var.backend_pool_health_probes
-  backend_pool_load_balancings = var.backend_pool_load_balancings
-  backend_pools                = var.backend_pools
-
-  rm_frontend_endpoints = { for fe in local.frontend_endpoints : fe.name => fe }
 }
