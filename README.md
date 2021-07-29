@@ -41,17 +41,15 @@ module "rg" {
 }
 
 module "front-door-waf" {
-  source  = "claranet/front-door/azurerm//modules/frontdoor-waf"
+  source  = "claranet/front-door/azurerm//modules/waf-policy"
   version = "x.x.x"
 
   resource_group_name = module.rg.resource_group_name
-  location            = module.azure-region.location
-  location_short      = module.azure-region.location_short
   client_name         = var.client_name
   environment         = var.environment
   stack               = var.stack
 
-  waf_managed_rules = [{
+  managed_rules = [{
     type    = "DefaultRuleSet"
     version = "1.0"
     overrides = [{
@@ -62,12 +60,12 @@ module "front-door-waf" {
         rule_id = 933111
       }]
     }]
-    }, {
+  }, {
     type    = "Microsoft_BotManagerRuleSet"
     version = "1.0"
   }]
 
-  waf_custom_block_response_body = "files/403.html"
+  custom_block_response_body = filebase64("${path.module}/files/403.html")
 }
 
 module "front-door" {

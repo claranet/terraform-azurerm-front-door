@@ -8,6 +8,8 @@ resource "azurerm_frontdoor_firewall_policy" "frontdoor_waf" {
   custom_block_response_status_code = var.custom_block_response_status_code
   custom_block_response_body        = var.custom_block_response_body == null ? filebase64("${path.module}/files/403.html") : var.custom_block_response_body
 
+  tags = merge(local.default_tags, var.extra_tags)
+
   dynamic "custom_rule" {
     for_each = var.custom_rules
     content {
