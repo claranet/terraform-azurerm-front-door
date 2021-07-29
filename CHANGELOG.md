@@ -6,9 +6,9 @@ Breaking
   * AZ-160: Unify diagnostics settings on all Claranet modules
   * AZ-535: Removed region from name since service is global
   * AZ-535: Harmonize variables
+  * AZ-535: Rework waf-policy submodule
 
 Fixes
-  * AZ-459: Avoid Go error `file name too long` by truncating the `custom_block*` variables to 255 characters
   * AZ-535: Fix default frontend endpoint name
   * AZ-535: Add missing tags
 

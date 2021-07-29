@@ -1,19 +1,15 @@
-resource "azurerm_frontdoor_firewall_policy" "frontdoor-waf" {
-  name                = local.waf_policy_name
+resource "azurerm_frontdoor_firewall_policy" "frontdoor_waf" {
+  name                = local.policy_name
   resource_group_name = var.resource_group_name
 
-  enabled                           = var.enable_waf
-  mode                              = var.waf_mode
-  redirect_url                      = var.waf_redirect_url != "" ? var.waf_redirect_url : null
-  custom_block_response_status_code = var.waf_custom_block_response_status_code
-  custom_block_response_body = (
-    fileexists(substr(var.waf_custom_block_response_body, 0, 255))
-    ? filebase64(var.waf_custom_block_response_body)
-    : var.waf_custom_block_response_body
-  )
+  enabled                           = var.enabled
+  mode                              = var.mode
+  redirect_url                      = var.redirect_url
+  custom_block_response_status_code = var.custom_block_response_status_code
+  custom_block_response_body        = var.custom_block_response_body == null ? filebase64("${path.module}/files/403.html") : var.custom_block_response_body
 
   dynamic "custom_rule" {
-    for_each = var.waf_custom_rules
+    for_each = var.custom_rules
     content {
       # Required
       name   = lookup(custom_rule.value, "name")
@@ -45,7 +41,7 @@ resource "azurerm_frontdoor_firewall_policy" "frontdoor-waf" {
   }
 
   dynamic "managed_rule" {
-    for_each = var.waf_managed_rules
+    for_each = var.managed_rules
     content {
       # Required
       type    = lookup(managed_rule.value, "type")
