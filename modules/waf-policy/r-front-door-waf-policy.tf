@@ -6,7 +6,7 @@ resource "azurerm_frontdoor_firewall_policy" "frontdoor_waf" {
   mode                              = var.mode
   redirect_url                      = var.redirect_url
   custom_block_response_status_code = var.custom_block_response_status_code
-  custom_block_response_body        = var.custom_block_response_body == null ? filebase64("${path.module}/files/403.html") : var.custom_block_response_body
+  custom_block_response_body        = var.custom_block_response_body == "" ? filebase64("${path.module}/files/403.html") : var.custom_block_response_body
 
   tags = merge(local.default_tags, var.extra_tags)
 

@@ -86,7 +86,7 @@ variable "custom_block_response_status_code" {
 variable "custom_block_response_body" {
   description = "If a custom_rule block's action type is block, this is the response body. The body must be specified in base64 encoding."
   type        = string
-  default     = null
+  default     = ""
 }
 
 variable "managed_rules" {
