@@ -1,4 +1,4 @@
-# Unreleased
+# v4.3.0 - 2021-08-30
 
 Breaking
   * AZ-498: Switch to `azurerm_frontdoor_custom_https_configuration` to manage HTTPS. Read [Migration Guide](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration)
