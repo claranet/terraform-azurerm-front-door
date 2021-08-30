@@ -1,13 +1,3 @@
-variable "location" {
-  description = "Azure location."
-  type        = string
-}
-
-variable "location_short" {
-  description = "Short string for Azure location."
-  type        = string
-}
-
 variable "resource_group_name" {
   description = "Resource group name"
   type        = string
@@ -34,31 +24,31 @@ variable "name_prefix" {
   default     = ""
 }
 
-variable "enable_waf" {
+variable "enabled" {
   description = "Enable WAF on Front Door"
   type        = bool
   default     = true
 }
 
-variable "waf_custom_policy_name" {
-  description = "The name of the policy."
+variable "custom_name" {
+  description = "Custom name for the policy."
   type        = string
   default     = ""
 }
 
-variable "waf_mode" {
+variable "mode" {
   description = "The firewall policy mode. Possible values are Detection, Prevention."
   type        = string
   default     = "Prevention"
 }
 
-variable "waf_redirect_url" {
+variable "redirect_url" {
   description = "If action type is redirect, this field represents redirect URL for the client."
   type        = string
   default     = null
 }
 
-variable "waf_custom_rules" {
+variable "custom_rules" {
   description = "One or more custom_rule blocks."
   type        = list(any)
   # type = list(object({
@@ -87,19 +77,19 @@ variable "waf_custom_rules" {
 #  default     = []
 #}
 
-variable "waf_custom_block_response_status_code" {
+variable "custom_block_response_status_code" {
   description = "If a custom_rule block's action type is block, this is the response status code. Possible values are 200, 403, 405, 406, or 429."
   type        = number
   default     = 403
 }
 
-variable "waf_custom_block_response_body" {
+variable "custom_block_response_body" {
   description = "If a custom_rule block's action type is block, this is the response body. The body must be specified in base64 encoding."
   type        = string
-  default     = "default_403"
+  default     = ""
 }
 
-variable "waf_managed_rules" {
+variable "managed_rules" {
   description = "One or more managed_rule blocks."
   type        = any
   # type = list(object({
@@ -132,3 +122,8 @@ variable "waf_managed_rules" {
   default = []
 }
 
+variable "extra_tags" {
+  description = "Extra tags to add"
+  type        = map(string)
+  default     = {}
+}

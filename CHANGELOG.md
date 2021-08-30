@@ -1,3 +1,18 @@
+# Unreleased
+
+Breaking
+  * AZ-498: Switch to `azurerm_frontdoor_custom_https_configuration` to manage HTTPS. Read [Migration Guide](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration)
+  * AZ-498: azurerm provider >=2.60
+  * AZ-160: Unify diagnostics settings on all Claranet modules
+  * AZ-535: Removed region from name since service is global
+  * AZ-535: Harmonize variables
+  * AZ-535: Rework waf-policy submodule
+
+Fixes
+  * AZ-535: Fix default frontend endpoint name
+  * AZ-535: Add missing tags
+  * AZ-532: Revamp README with latest `terraform-docs` tool
+
 # v4.2.0 - 2021-02-26
 
 Added

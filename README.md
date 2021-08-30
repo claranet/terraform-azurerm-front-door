@@ -1,7 +1,7 @@
 # Azure Front Door
 [![Changelog](https://img.shields.io/badge/changelog-release-green.svg)](CHANGELOG.md) [![Notice](https://img.shields.io/badge/notice-copyright-yellow.svg)](NOTICE) [![Apache V2 License](https://img.shields.io/badge/license-Apache%20V2-orange.svg)](LICENSE) [![TF Registry](https://img.shields.io/badge/terraform-registry-blue.svg)](https://registry.terraform.io/modules/claranet/front-door/azurerm/)
 
-This terraform module is designed to create an [Azure Front Door](https://www.terraform.io/docs/providers/azurerm/r/front_door.html)
+This Terraform module is designed to create an [Azure Front Door](https://www.terraform.io/docs/providers/azurerm/r/front_door.html) resource.
 
 ## Requirements
 
@@ -10,7 +10,8 @@ This terraform module is designed to create an [Azure Front Door](https://www.te
 ## Version compatibility
 
 | Module version | Terraform version | AzureRM version |
-|----------------|-------------------| --------------- |
+| -------------- | ----------------- | --------------- |
+| >= 5.x.x       | 0.15.x & 1.0.x    | >= 2.25         |
 | >= 4.x.x       | 0.13.x            | >= 2.25         |
 | >= 3.x.x       | 0.12.x            | >= 2.25         |
 | >= 2.x.x       | 0.12.x            | < 2.0           |
@@ -41,17 +42,15 @@ module "rg" {
 }
 
 module "front-door-waf" {
-  source  = "claranet/front-door/azurerm//modules/frontdoor-waf"
+  source  = "claranet/front-door/azurerm//modules/waf-policy"
   version = "x.x.x"
 
   resource_group_name = module.rg.resource_group_name
-  location            = module.azure-region.location
-  location_short      = module.azure-region.location_short
   client_name         = var.client_name
   environment         = var.environment
   stack               = var.stack
 
-  waf_managed_rules = [{
+  managed_rules = [{
     type    = "DefaultRuleSet"
     version = "1.0"
     overrides = [{
@@ -62,12 +61,12 @@ module "front-door-waf" {
         rule_id = 933111
       }]
     }]
-    }, {
+  }, {
     type    = "Microsoft_BotManagerRuleSet"
     version = "1.0"
   }]
 
-  waf_custom_block_response_body = "files/403.html"
+  custom_block_response_body = filebase64("${path.module}/files/403.html")
 }
 
 module "front-door" {
@@ -81,7 +80,7 @@ module "front-door" {
   environment         = var.environment
   stack               = var.stack
 
-  frontdoor_waf_policy_id = module.front-door-waf-policy.waf_policy_id
+  frontdoor_waf_policy_id = module.front-door-waf.waf_policy_id
 
   enable_default_frontend_endpoint = false
 
@@ -89,25 +88,46 @@ module "front-door" {
     {
       name                                    = "custom-fo"
       host_name                               = "custom-fo.example.com"
-      custom_https_provisioning_enabled       = true
-      web_application_firewall_policy_link_id = module.front-door-waf-policy.waf_policy_id
-      custom_https_configurations = [
-        {
+      web_application_firewall_policy_link_id = module.front-door-waf.waf_policy_id
+      custom_https_configuration = {
           certificate_source = "FrontDoor"
         }
-      ]
+    },
+    {
+      name                                    = "custom-bo"
+      host_name                               = "custom-bo.example.com"
+      web_application_firewall_policy_link_id = module.front-door-waf.waf_policy_id
+      custom_https_configuration = {
+        certificate_source = "AzureKeyVault"
+        azure_key_vault_certificate_vault_id       = "<key_vault_id>"
+        azure_key_vault_certificate_secret_name    = "<key_vault_secret_name>"
+        azure_key_vault_certificate_secret_version = "<secret_version>"  # optional, use "latest" if not defined
+      }
     }
   ]
 
   backend_pools = [{
     name = local.frontdoor_backend_name,
     backends = [{
-      host_header = module.app_service.app_service_default_site_hostname
-      address     = module.app_service.app_service_default_site_hostname
+      host_header = "custom-fo.example.com"
+      address     = "1.2.3.4"
     }]
   }]
 
   routing_rules = [{
+    name               = "default"
+    frontend_endpoints = ["custom-fo"]
+    accepted_protocols = ["Http", "Https"]
+    patterns_to_match  = ["/*"]
+    forwarding_configurations = [{
+      backend_pool_name                     = local.frontdoor_backend_name
+      cache_enabled                         = false
+      cache_use_dynamic_compression         = false
+      cache_query_parameter_strip_directive = "StripAll"
+      forwarding_protocol                   = "MatchRequest"
+    }]
+  }, 
+  {
     name               = "deny-install"
     accepted_protocols = ["Http", "Https"]
     patterns_to_match  = ["/core/install.php"]
@@ -122,11 +142,25 @@ module "front-door" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Providers
 
 | Name | Version |
 |------|---------|
-| azurerm | ~> 2 >= 2.25 |
+| azurerm | >= 2.60 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| diagnostics | claranet/diagnostic-settings/azurerm | 4.0.2 |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [azurerm_frontdoor.frontdoor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor) | resource |
+| [azurerm_frontdoor_custom_https_configuration.custom_https_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration) | resource |
 
 ## Inputs
 
@@ -135,13 +169,12 @@ module "front-door" {
 | backend\_pool\_health\_probes | A list of backend\_pool\_health\_probe blocks. | `list(map(string))` | <pre>[<br>  {<br>    "default": "default"<br>  }<br>]</pre> | no |
 | backend\_pool\_load\_balancings | A list of backend\_pool\_load\_balancing blocks. | `list(map(string))` | <pre>[<br>  {<br>    "default": "default"<br>  }<br>]</pre> | no |
 | backend\_pools | A list of backend\_pool blocks. | `list(any)` | n/a | yes |
-| backend\_pools\_send\_receive\_timeout\_seconds | n/a | `number` | `60` | no |
+| backend\_pools\_send\_receive\_timeout\_seconds | Specifies the send and receive timeout on forwarding request to the backend | `number` | `60` | no |
 | client\_name | Client name/account used in naming | `string` | n/a | yes |
-| diag\_settings\_name | Custom name for the diagnostic settings of Application Gateway. | `string` | `""` | no |
+| custom\_name | Specifies the name of the Front Door service. | `string` | `""` | no |
 | enable\_default\_backend\_pools\_parameters | Use the module default backend\_pools\_health\_probe and backend\_pools\_load\_balancing blocks. | `bool` | `true` | no |
 | enable\_default\_frontend\_endpoint | Use the module default frontend\_endpoint block. | `bool` | `true` | no |
 | enable\_default\_routing\_rule | Use the module default routing\_rule block. | `bool` | `true` | no |
-| enable\_logging | Boolean flag to specify whether logging is enabled | `bool` | `true` | no |
 | enforce\_backend\_pools\_certificate\_name\_check | Enforce certificate name check on HTTPS requests to all backend pools, this setting will have no effect on HTTP requests. | `bool` | `false` | no |
 | environment | Project environment | `string` | n/a | yes |
 | extra\_tags | Extra tags to add | `map(string)` | `{}` | no |
@@ -149,13 +182,10 @@ module "front-door" {
 | frontdoor\_waf\_policy\_id | Frontdoor WAF Policy ID | `string` | `null` | no |
 | frontend\_endpoints | A list frontend\_endpoint block. | `list(any)` | `[]` | no |
 | load\_balancer\_enabled | Should the Front Door Load Balancer be Enabled? | `bool` | `true` | no |
-| location | Azure location. | `string` | n/a | yes |
-| location\_short | Short string for Azure location. | `string` | n/a | yes |
-| logs\_enable\_metrics | Boolean flag to specify whether collecting metrics is enabled | `bool` | `false` | no |
-| logs\_log\_analytics\_workspace\_id | Log Analytics Workspace id for logs | `string` | `null` | no |
-| logs\_storage\_account\_id | Storage Account id for logs | `string` | `null` | no |
-| logs\_storage\_retention | Retention in days for logs on Storage Account | `number` | `30` | no |
-| name | Specifies the name of the Front Door service. | `string` | `""` | no |
+| logs\_categories | Log categories to send to destinations. | `list(string)` | `null` | no |
+| logs\_destinations\_ids | List of destination resources Ids for logs diagnostics destination. Can be Storage Account, Log Analytics Workspace and Event Hub. No more than one of each can be set. Empty list to disable logging. | `list(string)` | n/a | yes |
+| logs\_metrics\_categories | Metrics categories to send to destinations. | `list(string)` | `null` | no |
+| logs\_retention\_days | Number of days to keep logs on storage account | `number` | `30` | no |
 | name\_prefix | Optional prefix for the generated name | `string` | `""` | no |
 | resource\_group\_name | Resource group name | `string` | n/a | yes |
 | routing\_rules | A routing\_rule block. | `any` | `[]` | no |
@@ -166,9 +196,9 @@ module "front-door" {
 | Name | Description |
 |------|-------------|
 | frontdoor\_cname | The host that each frontendEndpoint must CNAME to |
+| frontdoor\_frontend\_endpoints | The IDs of the frontend endpoints. |
 | frontdoor\_id | The ID of the FrontDoor. |
-
+<!-- END_TF_DOCS -->
 ## Related documentation
 
 Azure Front Door: [docs.microsoft.com/en-us/rest/api/frontdoor/](https://docs.microsoft.com/en-us/rest/api/frontdoor/)
-
