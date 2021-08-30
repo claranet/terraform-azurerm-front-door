@@ -11,6 +11,7 @@ Breaking
 Fixes
   * AZ-535: Fix default frontend endpoint name
   * AZ-535: Add missing tags
+  * AZ-532: Revamp README with latest `terraform-docs` tool
 
 # v4.2.0 - 2021-02-26
 

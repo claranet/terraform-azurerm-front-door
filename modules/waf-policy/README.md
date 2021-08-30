@@ -10,7 +10,8 @@ This Terraform module is designed to create an [Azure Front Door WAF Policy](htt
 ## Version compatibility
 
 | Module version | Terraform version | AzureRM version |
-|----------------|-------------------| --------------- |
+| -------------- | ----------------- | --------------- |
+| >= 5.x.x       | 0.15.x & 1.0.x    | >= 2.25         |
 | >= 4.x.x       | 0.13.x            | >= 2.25         |
 | >= 3.x.x       | 0.12.x            | >= 2.25         |
 | >= 2.x.x       | 0.12.x            | < 2.0           |
@@ -69,13 +70,7 @@ module "front-door-waf" {
 }
 ```
 
-## Requirements
-
-| Name | Version |
-|------|---------|
-| terraform | >= 0.12 |
-| azurerm | >= 2.25 |
-
+<!-- BEGIN_TF_DOCS -->
 ## Providers
 
 | Name | Version |
@@ -84,20 +79,20 @@ module "front-door-waf" {
 
 ## Modules
 
-No Modules.
+No modules.
 
 ## Resources
 
-| Name |
-|------|
-| [azurerm_frontdoor_firewall_policy](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_firewall_policy) |
+| Name | Type |
+|------|------|
+| [azurerm_frontdoor_firewall_policy.frontdoor_waf](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_firewall_policy) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | client\_name | Client name/account used in naming | `string` | n/a | yes |
-| custom\_block\_response\_body | If a custom\_rule block's action type is block, this is the response body. The body must be specified in base64 encoding. | `string` | `null` | no |
+| custom\_block\_response\_body | If a custom\_rule block's action type is block, this is the response body. The body must be specified in base64 encoding. | `string` | `""` | no |
 | custom\_block\_response\_status\_code | If a custom\_rule block's action type is block, this is the response status code. Possible values are 200, 403, 405, 406, or 429. | `number` | `403` | no |
 | custom\_name | Custom name for the policy. | `string` | `""` | no |
 | custom\_rules | One or more custom\_rule blocks. | `list(any)` | `[]` | no |
@@ -116,3 +111,4 @@ No Modules.
 | Name | Description |
 |------|-------------|
 | waf\_policy\_id | The ID of the WAF policy. |
+<!-- END_TF_DOCS -->

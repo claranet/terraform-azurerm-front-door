@@ -10,7 +10,8 @@ This Terraform module is designed to create an [Azure Front Door](https://www.te
 ## Version compatibility
 
 | Module version | Terraform version | AzureRM version |
-|----------------|-------------------| --------------- |
+| -------------- | ----------------- | --------------- |
+| >= 5.x.x       | 0.15.x & 1.0.x    | >= 2.25         |
 | >= 4.x.x       | 0.13.x            | >= 2.25         |
 | >= 3.x.x       | 0.12.x            | >= 2.25         |
 | >= 2.x.x       | 0.12.x            | < 2.0           |
@@ -141,6 +142,7 @@ module "front-door" {
 }
 ```
 
+<!-- BEGIN_TF_DOCS -->
 ## Providers
 
 | Name | Version |
@@ -155,10 +157,10 @@ module "front-door" {
 
 ## Resources
 
-| Name |
-|------|
-| [azurerm_frontdoor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor) |
-| [azurerm_frontdoor_custom_https_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration) |
+| Name | Type |
+|------|------|
+| [azurerm_frontdoor.frontdoor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor) | resource |
+| [azurerm_frontdoor_custom_https_configuration.custom_https_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration) | resource |
 
 ## Inputs
 
@@ -180,8 +182,6 @@ module "front-door" {
 | frontdoor\_waf\_policy\_id | Frontdoor WAF Policy ID | `string` | `null` | no |
 | frontend\_endpoints | A list frontend\_endpoint block. | `list(any)` | `[]` | no |
 | load\_balancer\_enabled | Should the Front Door Load Balancer be Enabled? | `bool` | `true` | no |
-| location | Azure location. | `string` | n/a | yes |
-| location\_short | Short string for Azure location. | `string` | n/a | yes |
 | logs\_categories | Log categories to send to destinations. | `list(string)` | `null` | no |
 | logs\_destinations\_ids | List of destination resources Ids for logs diagnostics destination. Can be Storage Account, Log Analytics Workspace and Event Hub. No more than one of each can be set. Empty list to disable logging. | `list(string)` | n/a | yes |
 | logs\_metrics\_categories | Metrics categories to send to destinations. | `list(string)` | `null` | no |
@@ -198,7 +198,7 @@ module "front-door" {
 | frontdoor\_cname | The host that each frontendEndpoint must CNAME to |
 | frontdoor\_frontend\_endpoints | The IDs of the frontend endpoints. |
 | frontdoor\_id | The ID of the FrontDoor. |
-
+<!-- END_TF_DOCS -->
 ## Related documentation
 
 Azure Front Door: [docs.microsoft.com/en-us/rest/api/frontdoor/](https://docs.microsoft.com/en-us/rest/api/frontdoor/)
