@@ -3,17 +3,14 @@
 
 This Terraform module is designed to create an [Azure Front Door](https://www.terraform.io/docs/providers/azurerm/r/front_door.html) resource.
 
-## Requirements
-
-* [AzureRM Terraform provider](https://www.terraform.io/docs/providers/azurerm/)
-
-## Version compatibility
+<!-- BEGIN_TF_DOCS -->
+## Global versionning rule for Claranet Azure modules
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
-| >= 5.x.x       | 0.15.x & 1.0.x    | >= 2.25         |
-| >= 4.x.x       | 0.13.x            | >= 2.25         |
-| >= 3.x.x       | 0.12.x            | >= 2.25         |
+| >= 5.x.x       | 0.15.x & 1.0.x    | >= 2.0          |
+| >= 4.x.x       | 0.13.x            | >= 2.0          |
+| >= 3.x.x       | 0.12.x            | >= 2.0          |
 | >= 2.x.x       | 0.12.x            | < 2.0           |
 | <  2.x.x       | 0.11.x            | < 2.0           |
 
@@ -24,7 +21,7 @@ which set some terraform variables in the environment needed by this module.
 More details about variables set by the `terraform-wrapper` available in the [documentation](https://github.com/claranet/terraform-wrapper#environment).
 
 ```hcl
-module "azure-region" {
+module "azure_region" {
   source  = "claranet/regions/azurerm"
   version = "x.x.x"
 
@@ -35,20 +32,33 @@ module "rg" {
   source  = "claranet/rg/azurerm"
   version = "x.x.x"
 
-  location    = module.azure-region.location
+  location    = module.azure_region.location
   client_name = var.client_name
   environment = var.environment
   stack       = var.stack
 }
 
-module "front-door-waf" {
-  source  = "claranet/front-door/azurerm//modules/waf-policy"
+module "logs" {
+  source  = "claranet/run-common/azurerm//modules/logs"
   version = "x.x.x"
 
-  resource_group_name = module.rg.resource_group_name
   client_name         = var.client_name
   environment         = var.environment
   stack               = var.stack
+  location            = module.azure_region.location
+  location_short      = module.azure_region.location_short
+  resource_group_name = module.rg.resource_group_name
+}
+
+module "front_door_waf" {
+  source  = "claranet/front-door/azurerm//modules/waf-policy"
+  version = "x.x.x"
+
+  client_name = var.client_name
+  environment = var.environment
+  stack       = var.stack
+
+  resource_group_name = module.rg.resource_group_name
 
   managed_rules = [{
     type    = "DefaultRuleSet"
@@ -61,26 +71,26 @@ module "front-door-waf" {
         rule_id = 933111
       }]
     }]
-  }, {
+    }, {
     type    = "Microsoft_BotManagerRuleSet"
     version = "1.0"
   }]
 
-  custom_block_response_body = filebase64("${path.module}/files/403.html")
+  # Custom error page 
+  #custom_block_response_body = filebase64("${path.module}/files/403.html")
 }
 
-module "front-door" {
+module "front_door" {
   source  = "claranet/front-door/azurerm"
   version = "x.x.x"
 
-  resource_group_name = module.rg.resource_group_name
-  location            = module.azure-region.location
-  location_short      = module.azure-region.location_short
-  client_name         = var.client_name
-  environment         = var.environment
-  stack               = var.stack
+  client_name = var.client_name
+  environment = var.environment
+  stack       = var.stack
 
-  frontdoor_waf_policy_id = module.front-door-waf.waf_policy_id
+  resource_group_name = module.rg.resource_group_name
+
+  frontdoor_waf_policy_id = module.front_door_waf.waf_policy_id
 
   enable_default_frontend_endpoint = false
 
@@ -88,26 +98,26 @@ module "front-door" {
     {
       name                                    = "custom-fo"
       host_name                               = "custom-fo.example.com"
-      web_application_firewall_policy_link_id = module.front-door-waf.waf_policy_id
+      web_application_firewall_policy_link_id = module.front_door_waf.waf_policy_id
       custom_https_configuration = {
-          certificate_source = "FrontDoor"
-        }
+        certificate_source = "FrontDoor"
+      }
     },
     {
       name                                    = "custom-bo"
       host_name                               = "custom-bo.example.com"
-      web_application_firewall_policy_link_id = module.front-door-waf.waf_policy_id
+      web_application_firewall_policy_link_id = module.front_door_waf.waf_policy_id
       custom_https_configuration = {
-        certificate_source = "AzureKeyVault"
+        certificate_source                         = "AzureKeyVault"
         azure_key_vault_certificate_vault_id       = "<key_vault_id>"
         azure_key_vault_certificate_secret_name    = "<key_vault_secret_name>"
-        azure_key_vault_certificate_secret_version = "<secret_version>"  # optional, use "latest" if not defined
+        azure_key_vault_certificate_secret_version = "<secret_version>" # optional, use "latest" if not defined
       }
     }
   ]
 
   backend_pools = [{
-    name = local.frontdoor_backend_name,
+    name = "frontdoor_backend_pool_1",
     backends = [{
       host_header = "custom-fo.example.com"
       address     = "1.2.3.4"
@@ -120,29 +130,33 @@ module "front-door" {
     accepted_protocols = ["Http", "Https"]
     patterns_to_match  = ["/*"]
     forwarding_configurations = [{
-      backend_pool_name                     = local.frontdoor_backend_name
+      backend_pool_name                     = "frontdoor_backend_pool_1"
       cache_enabled                         = false
       cache_use_dynamic_compression         = false
       cache_query_parameter_strip_directive = "StripAll"
       forwarding_protocol                   = "MatchRequest"
     }]
-  }, 
-  {
-    name               = "deny-install"
-    accepted_protocols = ["Http", "Https"]
-    patterns_to_match  = ["/core/install.php"]
+    },
+    {
+      name               = "deny-install"
+      accepted_protocols = ["Http", "Https"]
+      patterns_to_match  = ["/core/install.php"]
 
-    redirect_configurations = [{
-      custom_path       = "/"
-      redirect_protocol = "MatchRequest"
-      redirect_type     = "Found"
-    }]
+      redirect_configurations = [{
+        custom_path       = "/"
+        redirect_protocol = "MatchRequest"
+        redirect_type     = "Found"
+      }]
   }]
 
+  logs_destinations_ids = [
+    module.logs.log_analytics_workspace_id,
+    module.logs.logs_storage_account_id
+  ]
 }
+
 ```
 
-<!-- BEGIN_TF_DOCS -->
 ## Providers
 
 | Name | Version |
