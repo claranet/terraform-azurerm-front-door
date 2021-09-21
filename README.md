@@ -4,7 +4,7 @@
 This Terraform module is designed to create an [Azure Front Door](https://www.terraform.io/docs/providers/azurerm/r/front_door.html) resource.
 
 <!-- BEGIN_TF_DOCS -->
-## Global versionning rule for Claranet Azure modules
+## Global versioning rule for Claranet Azure modules
 
 | Module version | Terraform version | AzureRM version |
 | -------------- | ----------------- | --------------- |
