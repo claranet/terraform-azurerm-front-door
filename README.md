@@ -167,7 +167,7 @@ module "front_door" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| diagnostics | claranet/diagnostic-settings/azurerm | 4.0.2 |
+| diagnostics | claranet/diagnostic-settings/azurerm | 4.0.3 |
 
 ## Resources
 
