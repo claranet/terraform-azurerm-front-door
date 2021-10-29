@@ -1,5 +1,11 @@
 # Unreleased
 
+Breaking
+  * AZ-593: Rework variables
+
+Added
+  * AZ-593: Add outputs
+
 Changed
   * AZ-572: Revamp examples and improve CI
 

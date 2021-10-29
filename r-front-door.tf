@@ -3,7 +3,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   resource_group_name = var.resource_group_name
   friendly_name       = var.friendly_name
 
-  enforce_backend_pools_certificate_name_check = var.enforce_backend_pools_certificate_name_check
+  enforce_backend_pools_certificate_name_check = var.backend_pools_certificate_name_check_enforced
   backend_pools_send_receive_timeout_seconds   = var.backend_pools_send_receive_timeout_seconds
   load_balancer_enabled                        = var.load_balancer_enabled
 
@@ -12,10 +12,10 @@ resource "azurerm_frontdoor" "frontdoor" {
     content {
       name = lookup(backend_pool.value, "name")
       load_balancing_name = lookup(backend_pool.value, "load_balancing_name", (
-        var.enable_default_backend_pools_parameters ? local.default_backend_pool_load_balancing_name : null)
+        var.default_backend_pools_parameters_enabled ? local.default_backend_pool_load_balancing_name : null)
       )
       health_probe_name = lookup(backend_pool.value, "health_probe_name", (
-        var.enable_default_backend_pools_parameters ? local.default_backend_pool_health_probe_name : null)
+        var.default_backend_pools_parameters_enabled ? local.default_backend_pool_health_probe_name : null)
       )
 
       dynamic "backend" {
@@ -39,7 +39,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     for_each = var.backend_pool_health_probes
     content {
       name = lookup(backend_pool_health_probe.value, "name", (
-        var.enable_default_backend_pools_parameters ? local.default_backend_pool_health_probe_name : null
+        var.default_backend_pools_parameters_enabled ? local.default_backend_pool_health_probe_name : null
       ))
       enabled             = lookup(backend_pool_health_probe.value, "enabled", true)
       path                = lookup(backend_pool_health_probe.value, "path", "/")
@@ -53,7 +53,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     for_each = var.backend_pool_load_balancings
     content {
       name = lookup(backend_pool_load_balancing.value, "name", (
-        var.enable_default_backend_pools_parameters ? local.default_backend_pool_load_balancing_name : null
+        var.default_backend_pools_parameters_enabled ? local.default_backend_pool_load_balancing_name : null
       ))
       sample_size                     = lookup(backend_pool_load_balancing.value, "sample_size", 4)
       successful_samples_required     = lookup(backend_pool_load_balancing.value, "successful_samples_required", 2)
@@ -62,7 +62,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "frontend_endpoint" {
-    for_each = var.enable_default_frontend_endpoint ? ["fake"] : []
+    for_each = var.default_frontend_endpoint_enabled ? ["fake"] : []
     content {
       name                                    = local.default_frontend_endpoint_name
       host_name                               = local.default_frontend_endpoint_hostname
@@ -82,11 +82,11 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "routing_rule" {
-    for_each = var.enable_default_routing_rule ? ["fake"] : []
+    for_each = var.default_routing_rule_enabled ? ["fake"] : []
     content {
       name               = join("-", [var.backend_pools[0].name, "rr"])
       frontend_endpoints = [local.default_frontend_endpoint_name]
-      accepted_protocols = ["Http", "Https"]
+      accepted_protocols = var.default_routing_rule_accepted_protocols
       patterns_to_match  = ["/*"]
       enabled            = true
       forwarding_configuration {
@@ -104,7 +104,7 @@ resource "azurerm_frontdoor" "frontdoor" {
     content {
       name = lookup(routing_rule.value, "name")
       frontend_endpoints = lookup(routing_rule.value, "frontend_endpoints", (
-        var.enable_default_frontend_endpoint ? [local.default_frontend_endpoint_name] : null
+        var.default_frontend_endpoint_enabled ? [local.default_frontend_endpoint_name] : null
       ))
       accepted_protocols = lookup(routing_rule.value, "accepted_protocols", ["Http", "Https"])
       patterns_to_match  = lookup(routing_rule.value, "patterns_to_match", "/*")
