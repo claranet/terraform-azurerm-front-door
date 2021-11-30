@@ -62,7 +62,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "frontend_endpoint" {
-    for_each = var.default_frontend_endpoint_enabled ? ["fake"] : []
+    for_each = var.default_frontend_endpoint_enabled ? ["_"] : []
     content {
       name                                    = local.default_frontend_endpoint_name
       host_name                               = local.default_frontend_endpoint_hostname
@@ -82,7 +82,7 @@ resource "azurerm_frontdoor" "frontdoor" {
   }
 
   dynamic "routing_rule" {
-    for_each = var.default_routing_rule_enabled ? ["fake"] : []
+    for_each = var.default_routing_rule_enabled ? ["_"] : []
     content {
       name               = join("-", [var.backend_pools[0].name, "rr"])
       frontend_endpoints = [local.default_frontend_endpoint_name]
