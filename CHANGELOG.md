@@ -1,4 +1,4 @@
-# Unreleased
+# v4.4.0 - 2021-12-03
 
 Breaking
   * AZ-593: Rework variables
