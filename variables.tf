@@ -65,7 +65,7 @@ variable "backend_pools" {
   #}))
 }
 
-variable "enable_default_backend_pools_parameters" {
+variable "default_backend_pools_parameters_enabled" {
   description = "Use the module default backend_pools_health_probe and backend_pools_load_balancing blocks."
   type        = bool
   default     = true
@@ -90,7 +90,7 @@ variable "backend_pool_load_balancings" { # required
   default = [{ "default" = "default" }] # fake list of map, if enable_default_backend_pools_parameters take default lb values
 }
 
-variable "enforce_backend_pools_certificate_name_check" { # required but default value ...
+variable "backend_pools_certificate_name_check_enforced" { # required but default value ...
   description = "Enforce certificate name check on HTTPS requests to all backend pools, this setting will have no effect on HTTP requests."
   type        = bool
   default     = false
@@ -108,7 +108,7 @@ variable "friendly_name" { # optional
   default     = null
 }
 
-variable "enable_default_frontend_endpoint" {
+variable "default_frontend_endpoint_enabled" {
   description = "Use the module default frontend_endpoint block."
   type        = bool
   default     = true
@@ -134,10 +134,16 @@ variable "frontend_endpoints" { # required but claranet by default use default_f
   # }))
 }
 
-variable "enable_default_routing_rule" {
+variable "default_routing_rule_enabled" {
   description = "Use the module default routing_rule block."
   type        = bool
   default     = true
+}
+
+variable "default_routing_rule_accepted_protocols" {
+  description = "Accepted protocols for default routing rule"
+  type        = list(string)
+  default     = ["Http", "Https"]
 }
 
 variable "routing_rules" { # required but claranet by default use default_routing_rule

@@ -92,7 +92,7 @@ module "front_door" {
 
   frontdoor_waf_policy_id = module.front_door_waf.waf_policy_id
 
-  enable_default_frontend_endpoint = false
+  default_frontend_endpoint_enabled = false
 
   frontend_endpoints = [
     {
@@ -183,13 +183,14 @@ module "front_door" {
 | backend\_pool\_health\_probes | A list of backend\_pool\_health\_probe blocks. | `list(map(string))` | <pre>[<br>  {<br>    "default": "default"<br>  }<br>]</pre> | no |
 | backend\_pool\_load\_balancings | A list of backend\_pool\_load\_balancing blocks. | `list(map(string))` | <pre>[<br>  {<br>    "default": "default"<br>  }<br>]</pre> | no |
 | backend\_pools | A list of backend\_pool blocks. | `list(any)` | n/a | yes |
+| backend\_pools\_certificate\_name\_check\_enforced | Enforce certificate name check on HTTPS requests to all backend pools, this setting will have no effect on HTTP requests. | `bool` | `false` | no |
 | backend\_pools\_send\_receive\_timeout\_seconds | Specifies the send and receive timeout on forwarding request to the backend | `number` | `60` | no |
 | client\_name | Client name/account used in naming | `string` | n/a | yes |
 | custom\_name | Specifies the name of the Front Door service. | `string` | `""` | no |
-| enable\_default\_backend\_pools\_parameters | Use the module default backend\_pools\_health\_probe and backend\_pools\_load\_balancing blocks. | `bool` | `true` | no |
-| enable\_default\_frontend\_endpoint | Use the module default frontend\_endpoint block. | `bool` | `true` | no |
-| enable\_default\_routing\_rule | Use the module default routing\_rule block. | `bool` | `true` | no |
-| enforce\_backend\_pools\_certificate\_name\_check | Enforce certificate name check on HTTPS requests to all backend pools, this setting will have no effect on HTTP requests. | `bool` | `false` | no |
+| default\_backend\_pools\_parameters\_enabled | Use the module default backend\_pools\_health\_probe and backend\_pools\_load\_balancing blocks. | `bool` | `true` | no |
+| default\_frontend\_endpoint\_enabled | Use the module default frontend\_endpoint block. | `bool` | `true` | no |
+| default\_routing\_rule\_accepted\_protocols | Accepted protocols for default routing rule | `list(string)` | <pre>[<br>  "Http",<br>  "Https"<br>]</pre> | no |
+| default\_routing\_rule\_enabled | Use the module default routing\_rule block. | `bool` | `true` | no |
 | environment | Project environment | `string` | n/a | yes |
 | extra\_tags | Extra tags to add | `map(string)` | `{}` | no |
 | friendly\_name | A friendly name for the Front Door service. | `string` | `null` | no |
@@ -212,6 +213,7 @@ module "front_door" {
 | frontdoor\_cname | The host that each frontendEndpoint must CNAME to |
 | frontdoor\_frontend\_endpoints | The IDs of the frontend endpoints. |
 | frontdoor\_id | The ID of the FrontDoor. |
+| frontdoor\_name | The name of the FrontDoor |
 <!-- END_TF_DOCS -->
 ## Related documentation
 

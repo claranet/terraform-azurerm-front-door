@@ -69,7 +69,7 @@ module "front_door" {
 
   frontdoor_waf_policy_id = module.front_door_waf.waf_policy_id
 
-  enable_default_frontend_endpoint = false
+  default_frontend_endpoint_enabled = false
 
   frontend_endpoints = [
     {
