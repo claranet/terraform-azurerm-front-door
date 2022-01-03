@@ -162,6 +162,7 @@ module "front_door" {
 | Name | Version |
 |------|---------|
 | azurerm | >= 2.60 |
+| external | >= 2 |
 
 ## Modules
 
@@ -175,6 +176,7 @@ module "front_door" {
 |------|------|
 | [azurerm_frontdoor.frontdoor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor) | resource |
 | [azurerm_frontdoor_custom_https_configuration.custom_https_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration) | resource |
+| [external_external.frontdoor_ips](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
 
 ## Inputs
 
@@ -210,6 +212,8 @@ module "front_door" {
 
 | Name | Description |
 |------|-------------|
+| frontdoor\_address\_prefixes\_ipv4 | IPv4 address ranges used by the FrontDoor service |
+| frontdoor\_address\_prefixes\_ipv6 | IPv6 address ranges used by the FrontDoor service |
 | frontdoor\_cname | The host that each frontendEndpoint must CNAME to |
 | frontdoor\_frontend\_endpoints | The IDs of the frontend endpoints. |
 | frontdoor\_id | The ID of the FrontDoor. |
