@@ -169,7 +169,7 @@ module "front_door" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| diagnostics | claranet/diagnostic-settings/azurerm | 4.0.3 |
+| diagnostics | git::ssh://git@git.fr.clara.net/claranet/projects/cloud/azure/terraform/modules/diagnostic-settings.git | AZ-515_caf_naming |
 
 ## Resources
 
