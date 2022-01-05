@@ -212,9 +212,13 @@ module "front_door" {
 
 | Name | Description |
 |------|-------------|
-| frontdoor\_address\_prefixes\_ipv4 | IPv4 address ranges used by the FrontDoor service |
-| frontdoor\_address\_prefixes\_ipv6 | IPv6 address ranges used by the FrontDoor service |
+| frontdoor\_backend\_address\_prefixes\_ipv4 | IPv4 address ranges used by the FrontDoor service backend |
+| frontdoor\_backend\_address\_prefixes\_ipv6 | IPv6 address ranges used by the FrontDoor service backend |
 | frontdoor\_cname | The host that each frontendEndpoint must CNAME to |
+| frontdoor\_firstparty\_address\_prefixes\_ipv4 | IPv4 address ranges used by the FrontDoor service "first party" |
+| frontdoor\_firstparty\_address\_prefixes\_ipv6 | IPv6 address ranges used by the FrontDoor service "first party" |
+| frontdoor\_frontend\_address\_prefixes\_ipv4 | IPv4 address ranges used by the FrontDoor service frontend |
+| frontdoor\_frontend\_address\_prefixes\_ipv6 | IPv6 address ranges used by the FrontDoor service frontend |
 | frontdoor\_frontend\_endpoints | The IDs of the frontend endpoints. |
 | frontdoor\_id | The ID of the FrontDoor. |
 | frontdoor\_name | The name of the FrontDoor |

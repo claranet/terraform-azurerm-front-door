@@ -18,12 +18,32 @@ output "frontdoor_frontend_endpoints" {
   value       = azurerm_frontdoor.frontdoor.frontend_endpoints
 }
 
-output "frontdoor_address_prefixes_ipv4" {
-  description = "IPv4 address ranges used by the FrontDoor service"
-  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.addressPrefixes) : ip if length(regexall("\\.", ip)) > 0]
+output "frontdoor_backend_address_prefixes_ipv4" {
+  description = "IPv4 address ranges used by the FrontDoor service backend"
+  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.backendPrefixes) : ip if length(regexall("\\.", ip)) > 0]
 }
 
-output "frontdoor_address_prefixes_ipv6" {
-  description = "IPv6 address ranges used by the FrontDoor service"
-  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.addressPrefixes) : ip if length(regexall(":", ip)) > 0]
+output "frontdoor_backend_address_prefixes_ipv6" {
+  description = "IPv6 address ranges used by the FrontDoor service backend"
+  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.backendPrefixes) : ip if length(regexall(":", ip)) > 0]
+}
+
+output "frontdoor_frontend_address_prefixes_ipv4" {
+  description = "IPv4 address ranges used by the FrontDoor service frontend"
+  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.frontendPrefixes) : ip if length(regexall("\\.", ip)) > 0]
+}
+
+output "frontdoor_frontend_address_prefixes_ipv6" {
+  description = "IPv6 address ranges used by the FrontDoor service frontend"
+  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.frontendPrefixes) : ip if length(regexall(":", ip)) > 0]
+}
+
+output "frontdoor_firstparty_address_prefixes_ipv4" {
+  description = "IPv4 address ranges used by the FrontDoor service \"first party\""
+  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.firstpartyPrefixes) : ip if length(regexall("\\.", ip)) > 0]
+}
+
+output "frontdoor_firstparty_address_prefixes_ipv6" {
+  description = "IPv6 address ranges used by the FrontDoor service \"first party\""
+  value       = [for ip in jsondecode(data.external.frontdoor_ips.result.firstpartyPrefixes) : ip if length(regexall(":", ip)) > 0]
 }
