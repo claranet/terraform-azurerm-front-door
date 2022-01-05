@@ -18,22 +18,10 @@ variable "stack" {
   type        = string
 }
 
-variable "name_prefix" {
-  description = "Optional prefix for the generated name"
-  type        = string
-  default     = ""
-}
-
 variable "enabled" {
   description = "Enable WAF on Front Door"
   type        = bool
   default     = true
-}
-
-variable "custom_name" {
-  description = "Custom name for the policy."
-  type        = string
-  default     = ""
 }
 
 variable "mode" {

@@ -8,6 +8,7 @@ This Terraform module is designed to create an [Azure Front Door WAF Policy](htt
 
 | Name | Version |
 |------|---------|
+| azurecaf | ~> 1.1 |
 | azurerm | >= 2.25 |
 
 ## Modules
@@ -18,6 +19,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [azurecaf_name.frontdoor_waf_policy](https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/resources/name) | resource |
 | [azurerm_frontdoor_firewall_policy.frontdoor_waf](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_firewall_policy) | resource |
 
 ## Inputs
@@ -35,9 +37,11 @@ No modules.
 | managed\_rules | One or more managed\_rule blocks. | `any` | `[]` | no |
 | mode | The firewall policy mode. Possible values are Detection, Prevention. | `string` | `"Prevention"` | no |
 | name\_prefix | Optional prefix for the generated name | `string` | `""` | no |
+| name\_suffix | Optional suffix for the generated name | `string` | `""` | no |
 | redirect\_url | If action type is redirect, this field represents redirect URL for the client. | `string` | `null` | no |
 | resource\_group\_name | Resource group name | `string` | n/a | yes |
 | stack | Project stack name | `string` | n/a | yes |
+| use\_caf\_naming | Use the Azure CAF naming provider to generate default resource name. `custom_name` override this if set. Legacy default name is used if this is set to `false`. | `bool` | `true` | no |
 
 ## Outputs
 
