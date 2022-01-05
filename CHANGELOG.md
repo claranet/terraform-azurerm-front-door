@@ -1,5 +1,8 @@
 # Unreleased
 
+Breaking
+  * AZ-644: Drop Terraform 0.12 support
+
 Added:
   * AZ-644: Output FrontDoor IP ranges
 
