@@ -161,6 +161,7 @@ module "front_door" {
 
 | Name | Version |
 |------|---------|
+| azurecaf | ~> 1.1 |
 | azurerm | >= 2.60 |
 | external | >= 2 |
 
@@ -174,6 +175,9 @@ module "front_door" {
 
 | Name | Type |
 |------|------|
+| [azurecaf_name.frontdoor](https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/resources/name) | resource |
+| [azurecaf_name.frontdoor_lb](https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/resources/name) | resource |
+| [azurecaf_name.frontdoor_probe](https://registry.terraform.io/providers/aztfmod/azurecaf/latest/docs/resources/name) | resource |
 | [azurerm_frontdoor.frontdoor](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor) | resource |
 | [azurerm_frontdoor_custom_https_configuration.custom_https_configuration](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/frontdoor_custom_https_configuration) | resource |
 | [external_external.frontdoor_ips](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
@@ -188,6 +192,7 @@ module "front_door" {
 | backend\_pools\_certificate\_name\_check\_enforced | Enforce certificate name check on HTTPS requests to all backend pools, this setting will have no effect on HTTP requests. | `bool` | `false` | no |
 | backend\_pools\_send\_receive\_timeout\_seconds | Specifies the send and receive timeout on forwarding request to the backend | `number` | `60` | no |
 | client\_name | Client name/account used in naming | `string` | n/a | yes |
+| custom\_diagnostic\_settings\_name | Custom name of the diagnostics settings, name will be 'default' if not set. | `string` | `"default"` | no |
 | custom\_name | Specifies the name of the Front Door service. | `string` | `""` | no |
 | default\_backend\_pools\_parameters\_enabled | Use the module default backend\_pools\_health\_probe and backend\_pools\_load\_balancing blocks. | `bool` | `true` | no |
 | default\_frontend\_endpoint\_enabled | Use the module default frontend\_endpoint block. | `bool` | `true` | no |
@@ -204,9 +209,11 @@ module "front_door" {
 | logs\_metrics\_categories | Metrics categories to send to destinations. | `list(string)` | `null` | no |
 | logs\_retention\_days | Number of days to keep logs on storage account | `number` | `30` | no |
 | name\_prefix | Optional prefix for the generated name | `string` | `""` | no |
+| name\_suffix | Optional suffix for the generated name | `string` | `""` | no |
 | resource\_group\_name | Resource group name | `string` | n/a | yes |
 | routing\_rules | A routing\_rule block. | `any` | `[]` | no |
 | stack | Project stack name | `string` | n/a | yes |
+| use\_caf\_naming | Use the Azure CAF naming provider to generate default resource name. `custom_name` override this if set. Legacy default name is used if this is set to `false`. | `bool` | `true` | no |
 
 ## Outputs
 
