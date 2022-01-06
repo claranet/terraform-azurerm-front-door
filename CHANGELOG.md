@@ -1,4 +1,4 @@
-# Unreleased
+# v4.5.0 - 2022-01-06
 
 Breaking
   * AZ-644: Drop Terraform 0.12 support
