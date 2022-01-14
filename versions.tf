@@ -9,5 +9,9 @@ terraform {
       source  = "hashicorp/external"
       version = ">= 2"
     }
+    azurecaf = {
+      source  = "aztfmod/azurecaf"
+      version = "~> 1.1"
+    }
   }
 }

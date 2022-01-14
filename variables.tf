@@ -20,12 +20,6 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "name_prefix" {
-  description = "Optional prefix for the generated name"
-  type        = string
-  default     = ""
-}
-
 variable "extra_tags" {
   description = "Extra tags to add"
   type        = map(string)
@@ -34,11 +28,6 @@ variable "extra_tags" {
 
 # ------------------
 # Front Door
-variable "custom_name" {
-  description = "Specifies the name of the Front Door service."
-  type        = string
-  default     = ""
-}
 
 variable "backend_pools_send_receive_timeout_seconds" {
   description = "Specifies the send and receive timeout on forwarding request to the backend"
@@ -100,12 +89,6 @@ variable "load_balancer_enabled" { # optional
   description = "Should the Front Door Load Balancer be Enabled?"
   type        = bool
   default     = true
-}
-
-variable "friendly_name" { # optional
-  description = "A friendly name for the Front Door service."
-  type        = string
-  default     = null
 }
 
 variable "default_frontend_endpoint_enabled" {
@@ -175,56 +158,10 @@ variable "routing_rules" { # required but claranet by default use default_routin
   # }))
 }
 
-#variable "routing_rules_forwarding_configurations" {
-#  description = "A forwarding_configuration block."
-#  type        = list(map(string))
-#  default     = []
-#}
-#
-#variable "routing_rules_redirect_configurations" {
-#  description = "A redirect_configuration block."
-#  type        = list(map(string))
-#  default     = []
-#}
-#
-#variable "custom_https_configurations" {
-#  description = "A list of custom_https_configuration blocks"
-#  type        = list(map(string)) # certificate_source = string                         # optional
-#  #                               # azure_key_vault_certificate_id = string             # required if AzureKeyVault
-#  #                               # azure_key_vault_certificate_secret_name = string    # required if AzureKeyVault
-#  #                               # azure_key_vault_certificate_secret_version = string # required if AzureKeyVault
-#  default = null
-#}
-
 # ------------------
 # Front Door WAF Policy
 variable "frontdoor_waf_policy_id" {
   description = "Frontdoor WAF Policy ID"
   type        = string
   default     = null
-}
-
-#-------------
-# LOGGING
-variable "logs_destinations_ids" {
-  type        = list(string)
-  description = "List of destination resources Ids for logs diagnostics destination. Can be Storage Account, Log Analytics Workspace and Event Hub. No more than one of each can be set. Empty list to disable logging."
-}
-
-variable "logs_categories" {
-  type        = list(string)
-  description = "Log categories to send to destinations."
-  default     = null
-}
-
-variable "logs_metrics_categories" {
-  type        = list(string)
-  description = "Metrics categories to send to destinations."
-  default     = null
-}
-
-variable "logs_retention_days" {
-  type        = number
-  description = "Number of days to keep logs on storage account"
-  default     = 30
 }
