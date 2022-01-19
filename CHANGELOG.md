@@ -1,3 +1,8 @@
+# v5.0.1 - unreleased
+
+Fixed
+  * AZ-572: Fix main example code
+
 # v5.0.0 - 2022-01-14
 
 Breaking
