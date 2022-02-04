@@ -1,4 +1,4 @@
-# v5.0.1 - unreleased
+# v5.0.1 - 2022-02-04
 
 Fixed
   * AZ-572: Fix main example code
