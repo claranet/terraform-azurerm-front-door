@@ -109,9 +109,3 @@ variable "managed_rules" {
   # }))
   default = []
 }
-
-variable "extra_tags" {
-  description = "Extra tags to add"
-  type        = map(string)
-  default     = {}
-}

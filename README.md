@@ -207,6 +207,7 @@ module "front_door" {
 | default\_frontend\_endpoint\_enabled | Use the module default frontend\_endpoint block. | `bool` | `true` | no |
 | default\_routing\_rule\_accepted\_protocols | Accepted protocols for default routing rule | `list(string)` | <pre>[<br>  "Http",<br>  "Https"<br>]</pre> | no |
 | default\_routing\_rule\_enabled | Use the module default routing\_rule block. | `bool` | `true` | no |
+| default\_tags\_enabled | Option to enable or disable default tags | `bool` | `true` | no |
 | environment | Project environment | `string` | n/a | yes |
 | extra\_tags | Extra tags to add | `map(string)` | `{}` | no |
 | friendly\_name | A friendly name for the Front Door service. | `string` | `null` | no |
