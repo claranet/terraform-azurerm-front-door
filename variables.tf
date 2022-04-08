@@ -20,12 +20,6 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "extra_tags" {
-  description = "Extra tags to add"
-  type        = map(string)
-  default     = {}
-}
-
 # ------------------
 # Front Door
 

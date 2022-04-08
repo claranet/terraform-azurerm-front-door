@@ -31,6 +31,7 @@ No modules.
 | custom\_block\_response\_status\_code | If a custom\_rule block's action type is block, this is the response status code. Possible values are 200, 403, 405, 406, or 429. | `number` | `403` | no |
 | custom\_name | Custom name for the policy. | `string` | `""` | no |
 | custom\_rules | One or more custom\_rule blocks. | `list(any)` | `[]` | no |
+| default\_tags\_enabled | Option to enable or disable default tags | `bool` | `true` | no |
 | enabled | Enable WAF on Front Door | `bool` | `true` | no |
 | environment | Project environment | `string` | n/a | yes |
 | extra\_tags | Extra tags to add | `map(string)` | `{}` | no |
