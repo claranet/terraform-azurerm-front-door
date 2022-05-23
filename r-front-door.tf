@@ -122,6 +122,8 @@ resource "azurerm_frontdoor" "frontdoor" {
           cache_enabled                         = lookup(forwarding_configuration.value, "cache_enabled", false)
           cache_use_dynamic_compression         = lookup(forwarding_configuration.value, "cache_use_dynamic_compression", false)
           cache_query_parameter_strip_directive = lookup(forwarding_configuration.value, "cache_query_parameter_strip_directive", "StripAll")
+          cache_query_parameters                = lookup(forwarding_configuration.value, "cache_query_parameters", null)
+          cache_duration                        = lookup(forwarding_configuration.value, "cache_duration", null)
           custom_forwarding_path                = lookup(forwarding_configuration.value, "custom_forwarding_path", null)
           forwarding_protocol                   = lookup(forwarding_configuration.value, "forwarding_protocol", "MatchRequest")
         }
