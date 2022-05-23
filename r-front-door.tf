@@ -3,9 +3,12 @@ resource "azurerm_frontdoor" "frontdoor" {
   resource_group_name = var.resource_group_name
   friendly_name       = var.friendly_name
 
-  enforce_backend_pools_certificate_name_check = var.backend_pools_certificate_name_check_enforced
-  backend_pools_send_receive_timeout_seconds   = var.backend_pools_send_receive_timeout_seconds
-  load_balancer_enabled                        = var.load_balancer_enabled
+  load_balancer_enabled = var.load_balancer_enabled
+
+  backend_pool_settings {
+    enforce_backend_pools_certificate_name_check = var.backend_pools_certificate_name_check_enforced
+    backend_pools_send_receive_timeout_seconds   = var.backend_pools_send_receive_timeout_seconds
+  }
 
   dynamic "backend_pool" {
     for_each = var.backend_pools
