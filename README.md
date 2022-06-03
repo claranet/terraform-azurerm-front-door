@@ -171,7 +171,7 @@ module "front_door" {
 | Name | Version |
 |------|---------|
 | azurecaf | ~> 1.1 |
-| azurerm | >= 2.60 |
+| azurerm | ~> 3.0 |
 | external | >= 2 |
 
 ## Modules

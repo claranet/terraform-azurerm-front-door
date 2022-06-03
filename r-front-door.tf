@@ -3,9 +3,12 @@ resource "azurerm_frontdoor" "frontdoor" {
   resource_group_name = var.resource_group_name
   friendly_name       = var.friendly_name
 
-  enforce_backend_pools_certificate_name_check = var.backend_pools_certificate_name_check_enforced
-  backend_pools_send_receive_timeout_seconds   = var.backend_pools_send_receive_timeout_seconds
-  load_balancer_enabled                        = var.load_balancer_enabled
+  load_balancer_enabled = var.load_balancer_enabled
+
+  backend_pool_settings {
+    enforce_backend_pools_certificate_name_check = var.backend_pools_certificate_name_check_enforced
+    backend_pools_send_receive_timeout_seconds   = var.backend_pools_send_receive_timeout_seconds
+  }
 
   dynamic "backend_pool" {
     for_each = var.backend_pools
@@ -119,6 +122,8 @@ resource "azurerm_frontdoor" "frontdoor" {
           cache_enabled                         = lookup(forwarding_configuration.value, "cache_enabled", false)
           cache_use_dynamic_compression         = lookup(forwarding_configuration.value, "cache_use_dynamic_compression", false)
           cache_query_parameter_strip_directive = lookup(forwarding_configuration.value, "cache_query_parameter_strip_directive", "StripAll")
+          cache_query_parameters                = lookup(forwarding_configuration.value, "cache_query_parameters", null)
+          cache_duration                        = lookup(forwarding_configuration.value, "cache_duration", null)
           custom_forwarding_path                = lookup(forwarding_configuration.value, "custom_forwarding_path", null)
           forwarding_protocol                   = lookup(forwarding_configuration.value, "forwarding_protocol", "MatchRequest")
         }
