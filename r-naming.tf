@@ -1,4 +1,4 @@
-resource "azurecaf_name" "frontdoor" {
+data "azurecaf_name" "frontdoor" {
   name          = var.stack
   resource_type = "azurerm_frontdoor"
   prefixes      = var.name_prefix == "" ? null : [local.name_prefix]
@@ -8,7 +8,7 @@ resource "azurecaf_name" "frontdoor" {
   separator     = "-"
 }
 
-resource "azurecaf_name" "frontdoor_probe" {
+data "azurecaf_name" "frontdoor_probe" {
   name          = var.stack
   resource_type = "azurerm_frontdoor"
   prefixes      = var.name_prefix == "" ? null : [local.name_prefix]
@@ -18,7 +18,7 @@ resource "azurecaf_name" "frontdoor_probe" {
   separator     = "-"
 }
 
-resource "azurecaf_name" "frontdoor_lb" {
+data "azurecaf_name" "frontdoor_lb" {
   name          = var.stack
   resource_type = "azurerm_frontdoor"
   prefixes      = var.name_prefix == "" ? null : [local.name_prefix]
