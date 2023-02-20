@@ -56,7 +56,7 @@ module "front_door_waf" {
     },
   ]
 
-  # Custom error page 
+  # Custom error page
   #custom_block_response_body = filebase64("${path.module}/files/403.html")
 }
 
