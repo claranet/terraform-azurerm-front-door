@@ -1,3 +1,8 @@
+# v6.1.1 - 2023-03-01
+
+Fixed
+  * AZ-989: `pre-commit` and CI
+
 # v6.1.0 - 2022-11-23
 
 Changed
